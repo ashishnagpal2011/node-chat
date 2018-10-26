@@ -56,6 +56,20 @@
     </li>
   </script>
 
+  <script id="image-message-template" type="text/template">
+    <li class="message">
+      <div class="message__title">
+        <h4>{{from}}</h4>
+        <span>{{createdAt}}</span>
+      </div>
+      <div class="message__body">
+        <p>
+          <img src="{{url}}"> </img>
+        </p>
+      </div>
+    </li>
+  </script>
+
   <script id="typing-message-template" type="text/template">
     <p><em>{{text}}</em></p>
   </script>

@@ -108,12 +108,23 @@ jQuery('[name=message]').on('keydown',function(){
 var locationButton = jQuery('#send-location');
 
 function image (from, base64Image) {
-  var d = new Date();
-  //output.innerHTML+='<p><strong>'+username.value+' <font color=green>'+d.getHours()+':'+d.getMinutes()+'</font>'+':</strong>'+'</p>'+'</br>'+'<img src="' + base64Image + '"/>';
-    $('#messages').append($('<p>').append($('<strong>').text(from), '<strong>' +' <font color=green>'+d.getHours()+':'+d.getMinutes()+'</font>'+'</strong>'+'</br>', '<img src="' + base64Image + '"/>'));
+  // var d = new Date();
+  // //output.innerHTML+='<p><strong>'+username.value+' <font color=green>'+d.getHours()+':'+d.getMinutes()+'</font>'+':</strong>'+'</p>'+'</br>'+'<img src="' + base64Image + '"/>';
+  //   $('#messages').append($('<p>').append($('<strong>').text(from), '<strong>' +' <font color=green>'+d.getHours()+':'+d.getMinutes()+'</font>'+'</strong>'+'</br>', '<img src="' + base64Image + '"/>'));
+  jQuery('#feedback').html('');
+  jQuery('#feedback').hide();
+  var formattedTime=moment(moment().valueOf()).format('h:mm a');
+  var template=jQuery('#image-message-template').html();
+  var html=Mustache.render(template,{
+    from:from,
+    url:base64Image,
+    createdAt:formattedTime
+  });
+
+  jQuery('#messages').append(html);
+  scrollToBottom();
+
  }
-
-
 
 
 socket.on('user image', image);
@@ -123,7 +134,7 @@ $('#imagefile').bind('change', function(e){
       var data = e.originalEvent.target.files[0];
       var reader = new FileReader();
       reader.onload = function(evt){
-        image('me', evt.target.result);
+        image('Me', evt.target.result);
         socket.emit('user image', evt.target.result);
       };
       reader.readAsDataURL(data);
