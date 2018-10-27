@@ -1,3 +1,3 @@
 # node-chat
-Chat room application in NodeJS using socket.io.<br/>
-Live demo at- https://node-chat123.herokuapp.com/<br/>
+Chat room Version 2.0 application in NodeJS using socket.io.<br/>
+Live demo at- https://nchat123.herokuapp.com<br/>
