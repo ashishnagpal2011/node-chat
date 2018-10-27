@@ -5,6 +5,17 @@
   <title>Chat | NodeChat</title>
   <link rel="stylesheet" href="/css/styles.css">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (!Notification) {
+          alert('Desktop notifications not available in your browser.'); 
+          return;
+        }
+
+        if (Notification.permission !== "granted")
+          Notification.requestPermission();
+    });
+  </script>
 </head>
 <body class="chat">
   <div class="chat__sidebar">

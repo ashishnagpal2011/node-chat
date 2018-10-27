@@ -62,6 +62,7 @@ io.on('connection', (socket) => {
 
     socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
     socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined`));
+    socket.broadcast.to(params.room).emit('NotifyMeMessage', generateMessage('Admin', `${params.name} has joined`));
     callback();
   });
 
@@ -82,6 +83,15 @@ io.on('connection', (socket) => {
       socket.broadcast.to(user.room).emit('newTypingMessage',generateTypingMessage(user.name));
     }
 
+  });
+
+  socket.on('NotificationMessage',(message)=>{
+     var user=users.getUser(socket.id);
+
+     if(user)
+     {
+      socket.broadcast.to(user.room).emit('NotifyMeMessage',generateMessage(user.name, message.text));
+     }
   });
 
 
@@ -115,6 +125,7 @@ io.on('connection', (socket) => {
       console.log(roomset);
       io.to(user.room).emit('updateUserList',users.getUserList(user.room));
       io.to(user.room).emit('newMessage',generateMessage('Admin',`${user.name} has left`));
+      io.to(user.room).emit('NotifyMeMessage',generateMessage('Admin',`${user.name} has left`));
     }
     console.log('User was disconnected');
   });

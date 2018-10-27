@@ -16,6 +16,18 @@ function scrollToBottom() {
   }
 };
 
+function notifyMe(time,from,message) {
+  if (Notification.permission !== "granted")
+    Notification.requestPermission();
+  else {
+    var notification = new Notification(from+' ('+time+')', {
+      icon: 'http://www.myiconfinder.com/uploads/iconsets/256-256-c8b6cbadb620f8b3f588bf53464c8ab9.png',
+      body: message
+    });
+  }
+}
+
+
 socket.on('connect',function(){
   var params = jQuery.deparam(window.location.search);
 
@@ -45,6 +57,8 @@ socket.on('updateUserList',function (users) {
   });
   jQuery('#users').html(ol);
 });
+
+
 
 socket.on('newMessage',function(message){
   jQuery('#feedback').html('');
@@ -88,6 +102,11 @@ socket.on('newTypingMessage',function(message){
   scrollToBottom();
 });
 
+socket.on('NotifyMeMessage',function(message){
+  var formattedTime=moment(message.createdAt).format('h:mm a');
+  notifyMe(formattedTime,message.from,message.text);
+});
+
 
 jQuery('#message-form').on('submit',function(e){
   e.preventDefault();
@@ -99,6 +118,11 @@ jQuery('#message-form').on('submit',function(e){
   },function(){
     messageTextbox.val('');
   });
+  
+  socket.emit('NotificationMessage',{
+    text:messageTextbox.val()
+  });
+
 });
 
 jQuery('[name=message]').on('keydown',function(){
@@ -123,6 +147,9 @@ function image (from, base64Image) {
 
   jQuery('#messages').append(html);
   scrollToBottom();
+  socket.emit('NotificationMessage',{
+    text:'Sent An Image'
+  });
 
  }
 
@@ -152,6 +179,9 @@ locationButton.on('click',function(){
       socket.emit('createLocationMessage',{
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
+      });
+      socket.emit('NotificationMessage',{
+          text:'Sent Location'
       });
     } ,function(){
       locationButton.removeAttr('disabled').text('Send Location');
