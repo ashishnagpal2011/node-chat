@@ -87,8 +87,12 @@ io.on('connection', (socket) => {
 
   socket.on('user image', function (msg) {
       var user=users.getUser(socket.id);
-      console.log(msg);
-      socket.broadcast.emit('user image', user.name , msg);
+      //console.log(msg);
+      if(user)
+      {
+        socket.broadcast.to(user.room).emit('user image', user.name , msg);
+      }
+      console.log("image sent");
     });
 
   socket.on('createLocationMessage',(coords) => {
